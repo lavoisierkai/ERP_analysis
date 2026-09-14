@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>analysis.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="omsodoo-完整需求分析">OMS/Odoo 完整需求分析</h1>
+<p><strong>BRD / Functional Requirements / SRS 初稿</strong></p>
+<p><img src="stargear_architecture.png" alt="STARGEAR 整体架构（基于 Odoo）"></p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>适用品牌</td>
+<td>STARGEAR + PREMIER + SUNARMOR</td>
+</tr>
+<tr>
+<td>电商渠道</td>
+<td>Shopify × 2</td>
+</tr>
+<tr>
+<td>仓库</td>
+<td>XMN / SYD / AUK 三仓</td>
+</tr>
+<tr>
+<td>财务系统</td>
+<td>Xero × 2</td>
+</tr>
+<tr>
+<td>用途</td>
+<td>Odoo Fit-Gap、实施报价、自建 OMS/WMS 方案比较</td>
+</tr>
+<tr>
+<td>整理日期</td>
+<td>2026-09-14</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li>项目目标</li>
+<li>业务范围</li>
+<li>System of Record</li>
+<li>Product / SKU Management</li>
+<li>Inventory Management</li>
+<li>三仓库与库存调拨</li>
+<li>OMS / Sales Order</li>
+<li>Warehouse Allocation</li>
+<li>Purchasing</li>
+<li>Supplier Management</li>
+<li>Shipment / Container / Landed Cost</li>
+<li>Receiving / Put Away / WMS</li>
+<li>Stocktake</li>
+<li>Returns / Refunds</li>
+<li>Shopify Integration</li>
+<li>Xero Integration</li>
+<li>Multi-company / Brand</li>
+<li>Tax / GST</li>
+<li>Multi-currency</li>
+<li>Users / Roles / Permissions</li>
+<li>Audit / Security / Reliability</li>
+<li>Reporting / BI</li>
+<li>Dashboard</li>
+<li>Odoo 19 方案</li>
+<li>自建 OMS/WMS 方案</li>
+<li>Odoo vs 自建 OMS/WMS</li>
+<li>实施路线</li>
+<li>UAT / 验收标准</li>
+<li>Fit-Gap 标记</li>
+<li>最终建议</li>
+</ol>
+<ul>
+<li>附录 A — 推荐业务架构</li>
+<li>附录 B — 核心订单流</li>
+<li>附录 C — 核心供应链流</li>
+<li>附录 D — Odoo 官方 Shopify Connector（v19.0）</li>
+<li>附录 E — Shopify 配送与退货管理（官方文档）</li>
+<li>附录 F — Odoo 销售退货与退款（官方文档）</li>
+<li>附录 G — Odoo 导航入门</li>
+<li>附录 H — Odoo 库存基础：收货与存储</li>
+<li>附录 I — 第三方连接器对比：TechMarbles Shopify Connector</li>
+<li>参考链接汇总</li>
+</ul>
+<hr>
+<h2 id="1-项目目标">1. 项目目标</h2>
+<ul>
+<li>建立统一业务运营平台，连接 Shopify、订单、库存、仓库、采购、供应链和 Xero。</li>
+<li>建议系统边界：
+<ul>
+<li>Shopify = Commerce</li>
+<li>Odoo/OMS = Operations &amp; Inventory</li>
+<li>Xero = Financial Accounting</li>
+</ul>
+</li>
+<li>核心数据流：Shopify → OMS/Odoo → Xero。</li>
+<li>避免多个系统同时作为同一类数据的主数据源。</li>
+</ul>
+<hr>
+<h2 id="2-业务范围">2. 业务范围</h2>
+<ul>
+<li>STARGEAR：Starlink accessories。</li>
+<li>PREMIER：commercial consumables。</li>
+<li>SUNARMOR：solar/battery supplies &amp; spare parts。</li>
+<li>XMN：厦门采购/出口/集货。</li>
+<li>SYD：悉尼澳洲主配送。</li>
+<li>AUK：奥克兰新西兰配送。</li>
+<li>渠道：STARGEAR Shopify Store、PREMIER Shopify Store。</li>
+<li>财务：STARGEAR Xero、PREMIER Xero。</li>
+</ul>
+<hr>
+<h2 id="3-system-of-record">3. System of Record</h2>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>职责</th>
+<th>主数据范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shopify</td>
+<td>Commerce</td>
+<td>Website、Product presentation、Customer、Cart、Checkout、Payment、Online Order、Promotion</td>
+</tr>
+<tr>
+<td>Odoo/OMS</td>
+<td>Operations &amp; Inventory</td>
+<td>Inventory、Warehouse、Purchase、Supplier、Allocation、Picking、Packing、Transfer、Returns、Landed Cost</td>
+</tr>
+<tr>
+<td>Xero</td>
+<td>Financial Accounting</td>
+<td>General Ledger、AP、AR、GST、Bank、Payment、Financial Reporting</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-product--sku-management">4. Product / SKU Management</h2>
+<ul>
+<li>Product 字段：SKU、Name、Brand、Category、Description、Barcode、HS Code、Country of Origin、Weight、Dimensions、Supplier、Cost、Price、Currency、Tax Code、Active/Inactive。</li>
+<li>Variant 必须拥有独立 SKU、Barcode、Weight、Cost、Price、Inventory。</li>
+<li>SKU 是 Shopify、OMS/Odoo、Xero 之间主要业务 Key；不能依赖商品名称。</li>
+</ul>
+<hr>
+<h2 id="5-inventory-management">5. Inventory Management</h2>
+<ul>
+<li>每个 SKU × Warehouse 维护：
+<ul>
+<li>OnHand</li>
+<li>Reserved</li>
+<li>Available</li>
+<li>InTransit</li>
+<li>Damaged</li>
+<li>Quarantine</li>
+<li>Returned</li>
+</ul>
+</li>
+<li>建议公式：</li>
+</ul>
+<pre class="hljs"><code><div>Available = OnHand - Reserved - Damaged - Quarantine
+</div></code></pre>
+<ul>
+<li>所有库存调整必须记录：User、Timestamp、OldValue、NewValue、Reason。</li>
+</ul>
+<hr>
+<h2 id="6-三仓库与库存调拨">6. 三仓库与库存调拨</h2>
+<ul>
+<li>支持路线：
+<ul>
+<li>XMN → SYD</li>
+<li>XMN → AUK</li>
+<li>SYD ↔ AUK</li>
+</ul>
+</li>
+<li>Transfer 字段：Number、From、To、SKU、Qty、Requested Date、Ship Date、ETA、Actual Arrival、Status。</li>
+<li>状态：</li>
+</ul>
+<pre class="hljs"><code><div>Draft → Approved → Picking → Shipped → In Transit → Received → Completed
+</div></code></pre>
+<ul>
+<li>支持 Cancelled。</li>
+<li>货物离开源仓减少 OnHand，目标仓增加 InTransit；实际收货后转为 OnHand。</li>
+</ul>
+<hr>
+<h2 id="7-oms--sales-order">7. OMS / Sales Order</h2>
+<ul>
+<li>流程：</li>
+</ul>
+<pre class="hljs"><code><div>Shopify Order → Validate → Allocation → Warehouse Selection → Pick → Pack → Ship → Tracking → Shopify Fulfillment
+</div></code></pre>
+<ul>
+<li>状态：New、Confirmed、Allocated、Picking、Packed、PartiallyShipped、Shipped、Delivered、Cancelled、Returned、Refunded、Closed。</li>
+<li>必须支持订单拆分、部分发货、Backorder、取消、退货和退款。</li>
+<li>一个订单可以产生多个 Shipment，但必须保留与原 Shopify Order 的关联。</li>
+</ul>
+<hr>
+<h2 id="8-warehouse-allocation">8. Warehouse Allocation</h2>
+<ul>
+<li>根据客户地区、库存可用量、仓库优先级和物流规则决定发货仓。</li>
+<li>建议 SYD/AUK 优先；XMN Direct Ship 作为可配置规则。</li>
+</ul>
+<hr>
+<h2 id="9-purchasing">9. Purchasing</h2>
+<ul>
+<li>流程：</li>
+</ul>
+<pre class="hljs"><code><div>Purchase Request → RFQ → Approval → Purchase Order → Supplier Confirmation → Shipment → Receiving → Invoice
+</div></code></pre>
+<ul>
+<li>PO 字段：Supplier、Supplier SKU、Internal SKU、Qty、Unit Price、Currency、Expected Delivery、Warehouse、Incoterm、Payment Term、MOQ、Lead Time、Notes。</li>
+<li>审批阈值应可配置；示例：
+<ul>
+<li>&lt; A$1k</li>
+<li>A$1–5k</li>
+<li>A$5–20k</li>
+<li>
+<blockquote>
+<p>A$20k</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="10-supplier-management">10. Supplier Management</h2>
+<ul>
+<li>Supplier 字段：Contact、Country、Currency、Payment Terms、Lead Time、MOQ、Incoterm、Supplier SKU、Unit Cost、Historical Cost。</li>
+<li>支持 Supplier × SKU，保存不同供应商价格、MOQ、Lead Time 和历史采购成本。</li>
+</ul>
+<hr>
+<h2 id="11-shipment--container--landed-cost">11. Shipment / Container / Landed Cost</h2>
+<ul>
+<li>Shipment 字段：Number、Supplier、Warehouse、Container Number、Booking Number、ETD、ETA、Actual Arrival、Forwarder、Incoterm、Freight、Duty、Customs、Status。</li>
+<li>Landed Cost 公式：</li>
+</ul>
+<pre class="hljs"><code><div>Landed Cost = Product Cost + Freight + Insurance + Duty + Customs + Port Fee + Broker + Other Charges
+</div></code></pre>
+<ul>
+<li>利润分析应优先使用 Landed Cost，而不仅仅是 Supplier Cost。</li>
+</ul>
+<hr>
+<h2 id="12-receiving--put-away--wms">12. Receiving / Put Away / WMS</h2>
+<ul>
+<li>流程：</li>
+</ul>
+<pre class="hljs"><code><div>PO → Expected Receipt → Scan SKU → Quantity Check → Quality Check → Put Away → Inventory Update
+</div></code></pre>
+<ul>
+<li>支持部分收货，例如 Expected 100、Received 98、Damaged 2。</li>
+<li>支持 Receiving、Put Away、Picking、Packing、Dispatch、Stocktake、Adjustment、Transfer、Return。</li>
+<li>可扩展 Bin Location，例如：</li>
+</ul>
+<pre class="hljs"><code><div>SYD/A01/A01-01/A01-01-03
+</div></code></pre>
+<ul>
+<li>支持 Barcode / QR Code。</li>
+</ul>
+<hr>
+<h2 id="13-stocktake">13. Stocktake</h2>
+<ul>
+<li>流程：</li>
+</ul>
+<pre class="hljs"><code><div>Stocktake → Snapshot/Freeze → Count → Variance → Approval → Adjustment
+</div></code></pre>
+<ul>
+<li>记录：System Qty、Physical Qty、Variance、Reason、Counter、Timestamp、Approver。</li>
+</ul>
+<hr>
+<h2 id="14-returns--refunds">14. Returns / Refunds</h2>
+<ul>
+<li>流程：</li>
+</ul>
+<pre class="hljs"><code><div>Shopify Return → Return Authorisation → Warehouse Receive → Inspection → Good / Damaged / Quarantine
+</div></code></pre>
+<ul>
+<li>支持 Full Refund、Partial Refund、Shipping Refund、Product Refund。</li>
+<li>必须关联 Order、Invoice、Credit Note、Xero。</li>
+</ul>
+<hr>
+<h2 id="15-shopify-integration">15. Shopify Integration</h2>
+<ul>
+<li>Shopify → Odoo/OMS：
+<ul>
+<li>Products</li>
+<li>Customers</li>
+<li>Orders</li>
+<li>Payments</li>
+<li>Returns</li>
+<li>Refunds</li>
+</ul>
+</li>
+<li>Odoo/OMS → Shopify：
+<ul>
+<li>Inventory</li>
+<li>Fulfillment</li>
+<li>Tracking</li>
+<li>必要的 Product updates</li>
+</ul>
+</li>
+<li>两个 Store 分别配置：
+<ul>
+<li>Store ID</li>
+<li>Credentials</li>
+<li>Product / Inventory Mapping</li>
+<li>Order Mapping</li>
+<li>Tax Mapping</li>
+<li>Warehouse Mapping</li>
+</ul>
+</li>
+<li>必须验证：
+<ul>
+<li>同步延迟</li>
+<li>重复订单</li>
+<li>库存冲突</li>
+<li>失败重试</li>
+<li>webhook / cron 机制</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="16-xero-integration">16. Xero Integration</h2>
+<ul>
+<li>建议 Shopify 不直接连接 Xero，而采用：</li>
+</ul>
+<pre class="hljs"><code><div>Shopify → Odoo/OMS → Xero
+</div></code></pre>
+<ul>
+<li>OMS/Odoo → Xero：
+<ul>
+<li>Customer Invoice</li>
+<li>Credit Note</li>
+<li>Supplier Bill</li>
+<li>Payment</li>
+</ul>
+</li>
+<li>可按需要回传：
+<ul>
+<li>Payment Status</li>
+<li>Contacts</li>
+<li>Accounts</li>
+<li>Tax</li>
+</ul>
+</li>
+<li>必须验证实际 Xero Connector 的版本、同步对象、多公司、失败处理和费用。</li>
+</ul>
+<hr>
+<h2 id="17-multi-company--brand">17. Multi-company / Brand</h2>
+<ul>
+<li>只有独立 Legal Entity 才建立 Company。</li>
+<li>Brand / Business Unit 不应无理由拆成 Company。</li>
+<li>如果 SUNARMOR 是独立法律实体，建立独立 Company。</li>
+<li>如果 SUNARMOR 只是品牌，则使用 Brand / Business Unit / Analytic Dimension。</li>
+</ul>
+<hr>
+<h2 id="18-tax--gst">18. Tax / GST</h2>
+<ul>
+<li>澳洲：
+<ul>
+<li>GST taxable</li>
+<li>GST-free</li>
+<li>Export</li>
+<li>Input Tax Credit</li>
+<li>BAS</li>
+<li>Tax Mapping</li>
+</ul>
+</li>
+<li>NZ：
+<ul>
+<li>NZ GST</li>
+<li>NZ sales</li>
+<li>NZ purchases</li>
+<li>Import</li>
+<li>Export</li>
+<li>FX</li>
+</ul>
+</li>
+<li>税务配置应以实际注册情况及 Odoo/Xero 本地化能力为准。</li>
+</ul>
+<hr>
+<h2 id="19-multi-currency">19. Multi-currency</h2>
+<ul>
+<li>建议至少支持：AUD、NZD、USD、CNY。</li>
+<li>每笔交易保存：
+<ul>
+<li>Transaction Currency</li>
+<li>Exchange Rate</li>
+<li>Base Currency</li>
+<li>Transaction Date</li>
+</ul>
+</li>
+<li>历史交易不能随今日汇率变化而重算。</li>
+</ul>
+<hr>
+<h2 id="20-users--roles--permissions">20. Users / Roles / Permissions</h2>
+<table>
+<thead>
+<tr>
+<th>用户</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vincent</td>
+<td>Owner / SuperAdmin / Finance</td>
+</tr>
+<tr>
+<td>Bessie</td>
+<td>Sales / Shopify</td>
+</tr>
+<tr>
+<td>Cassie</td>
+<td>Sales</td>
+</tr>
+<tr>
+<td>Asher</td>
+<td>Warehouse Manager</td>
+</tr>
+<tr>
+<td>Johnny</td>
+<td>Sales + Warehouse</td>
+</tr>
+<tr>
+<td>Craig</td>
+<td>Admin / IT / Integration / Reporting</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>权限应按模块、Company、Warehouse、Store、操作类型细分。</li>
+<li>尤其限制：
+<ul>
+<li>Inventory Adjustment</li>
+<li>Refund</li>
+<li>PO Approval</li>
+<li>Accounting</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="21-audit--security--reliability">21. Audit / Security / Reliability</h2>
+<ul>
+<li>重要操作记录：User、Timestamp、Action、Old Value、New Value、Reason。</li>
+<li>安全：
+<ul>
+<li>MFA</li>
+<li>RBAC</li>
+<li>OAuth</li>
+<li>Encryption</li>
+<li>Secrets Management</li>
+<li>Audit Log</li>
+<li>API Access Control</li>
+</ul>
+</li>
+<li>Integration：
+<ul>
+<li>Authentication</li>
+<li>Authorization</li>
+<li>Idempotency</li>
+<li>Retry</li>
+<li>Dead Letter Queue</li>
+<li>Logging</li>
+<li>Monitoring</li>
+</ul>
+</li>
+<li>建议：
+<ul>
+<li>Availability 99.9%</li>
+<li>数据库 Daily Backup + Point-in-Time Recovery</li>
+<li>初始目标 RPO ≤ 1 hour、RTO ≤ 4 hours</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="22-reporting--bi">22. Reporting / BI</h2>
+<ul>
+<li>Sales：按 Brand、SKU、Customer、Shopify Store、Warehouse、Country。</li>
+<li>Inventory：On Hand、Available、Reserved、In Transit、Slow Moving、Dead Stock、Inventory Valuation。</li>
+<li>Purchasing：Open PO、Supplier Performance、Purchase Cost、Lead Time、MOQ。</li>
+<li>Warehouse：Pending Orders、Pick/Pack Performance、Stock Variance。</li>
+<li>Profitability：</li>
+</ul>
+<pre class="hljs"><code><div>Sales - Product/Landed Cost - Freight - Fees = Gross Margin
+</div></code></pre>
+<hr>
+<h2 id="23-dashboard">23. Dashboard</h2>
+<ul>
+<li>Management Dashboard：
+<ul>
+<li>Sales</li>
+<li>Orders</li>
+<li>Inventory Value</li>
+<li>Gross Margin</li>
+<li>SYD/AUK/XMN Inventory</li>
+<li>Open PO</li>
+<li>In Transit</li>
+<li>Backorders</li>
+<li>Returns</li>
+</ul>
+</li>
+<li>Warehouse Dashboard：
+<ul>
+<li>Pending Pick</li>
+<li>Pending Pack</li>
+<li>Dispatch</li>
+<li>Stock Variance</li>
+</ul>
+</li>
+<li>Purchasing Dashboard：
+<ul>
+<li>Open PO</li>
+<li>ETA</li>
+<li>Supplier Lead Time</li>
+<li>Cost Trend</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="24-odoo-19-方案">24. Odoo 19 方案</h2>
+<ul>
+<li>Odoo 19 作为运营核心，Shopify 作为 Commerce，Xero 作为 Finance。</li>
+<li>标准 Odoo 承担：
+<ul>
+<li>Sales</li>
+<li>Inventory</li>
+<li>Purchase</li>
+<li>Warehouse</li>
+<li>Supplier</li>
+</ul>
+</li>
+<li>特殊业务用 Custom Modules。</li>
+<li>重点 Fit-Gap：
+<ul>
+<li>Shopify 两店</li>
+<li>库存同步实时性</li>
+<li>三仓库 / Transit</li>
+<li>Allocation</li>
+<li>Returns / Refunds</li>
+<li>Xero Connector</li>
+<li>AU/NZ GST</li>
+<li>Landed Cost</li>
+<li>Container / Shipment</li>
+<li>Barcode</li>
+<li>审批</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="25-自建-omswms-方案">25. 自建 OMS/WMS 方案</h2>
+<ul>
+<li>架构：</li>
+</ul>
+<pre class="hljs"><code><div>Shopify → API Gateway → OMS API → PostgreSQL
+</div></code></pre>
+<ul>
+<li>异步：SQS</li>
+<li>Cache：Redis</li>
+<li>文件/备份：S3</li>
+<li>部署：ECS/Fargate 或 Lambda</li>
+<li>财务：Xero API</li>
+<li>建议技术栈：
+<ul>
+<li>React / Next.js</li>
+<li>Python FastAPI</li>
+<li>PostgreSQL</li>
+<li>AWS SQS</li>
+<li>Redis</li>
+<li>S3</li>
+<li>ECS/Fargate</li>
+<li>CloudWatch</li>
+<li>Secrets Manager</li>
+</ul>
+</li>
+<li>自建方案适合高度定制、实时事件驱动和长期产品化，但需要承担税务、财务、审计、运维和升级成本。</li>
+</ul>
+<hr>
+<h2 id="26-odoo-vs-自建-omswms">26. Odoo vs 自建 OMS/WMS</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Odoo</th>
+<th>自建 OMS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shopify</td>
+<td>9/10</td>
+<td>10/10</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td>10/10</td>
+<td>10/10</td>
+</tr>
+<tr>
+<td>Purchasing</td>
+<td>10/10</td>
+<td>10/10</td>
+</tr>
+<tr>
+<td>WMS</td>
+<td>9/10</td>
+<td>10/10</td>
+</tr>
+<tr>
+<td>Xero</td>
+<td>7/10</td>
+<td>9/10</td>
+</tr>
+<tr>
+<td>AU/NZ GST</td>
+<td>10/10</td>
+<td>5/10</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td>10/10</td>
+<td>3/10</td>
+</tr>
+<tr>
+<td>Custom Logic</td>
+<td>8/10</td>
+<td>10/10</td>
+</tr>
+<tr>
+<td>Time-to-Market</td>
+<td>9/10</td>
+<td>5/10</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="27-实施路线">27. 实施路线</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 1 Foundation</td>
+<td>Company、Brand、Product、SKU、Supplier、Customer、Warehouse、Location、Tax、Currency；Shopify 两店；三仓库存、Reserved、Available、Transfer</td>
+</tr>
+<tr>
+<td>Phase 2 Warehouse + Purchasing</td>
+<td>Receiving、Put Away、Picking、Packing、Dispatch、Barcode、Stocktake、Purchase Request、RFQ、PO、Approval、Supplier</td>
+</tr>
+<tr>
+<td>Phase 3 International Supply Chain</td>
+<td>Shipment、Container、ETA、Freight、Customs、Duty、Landed Cost、In Transit</td>
+</tr>
+<tr>
+<td>Phase 4 Finance</td>
+<td>Invoice、Credit Note、Supplier Bill、Payment、GST、Reconciliation</td>
+</tr>
+<tr>
+<td>Phase 5 Analytics</td>
+<td>Data Warehouse、Databricks/SQL、Power BI、Forecast、Replenishment、Dead Stock</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="28-uat--验收标准">28. UAT / 验收标准</h2>
+<ul>
+<li>Order：
+<ul>
+<li>Shopify Order 自动进入</li>
+<li>不重复</li>
+<li>可取消</li>
+<li>拆单</li>
+<li>部分发货</li>
+<li>Backorder</li>
+</ul>
+</li>
+<li>Inventory：
+<ul>
+<li>三仓</li>
+<li>Reserved</li>
+<li>Available</li>
+<li>Transfer</li>
+<li>In Transit 数量正确</li>
+</ul>
+</li>
+<li>Warehouse：
+<ul>
+<li>Receiving</li>
+<li>Picking</li>
+<li>Packing</li>
+<li>Dispatch</li>
+<li>Stocktake 全流程完成</li>
+</ul>
+</li>
+<li>Purchase：
+<ul>
+<li>PO</li>
+<li>Approval</li>
+<li>Receiving</li>
+<li>Partial Receiving</li>
+<li>Supplier Invoice</li>
+</ul>
+</li>
+<li>Shopify：
+<ul>
+<li>Order</li>
+<li>Inventory</li>
+<li>Fulfillment</li>
+<li>Tracking</li>
+<li>Return</li>
+<li>Refund</li>
+</ul>
+</li>
+<li>Xero：
+<ul>
+<li>Invoice</li>
+<li>Credit Note</li>
+<li>Bill</li>
+<li>Payment</li>
+<li>GST 正确同步</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="29-fit-gap-标记">29. Fit-Gap 标记</h2>
+<ul>
+<li>O = Odoo Standard</li>
+<li>C = Configuration</li>
+<li>M = Custom Module</li>
+<li>I = Integration</li>
+<li>N = Not Supported</li>
+</ul>
+<p>建议拿本需求逐项询问 Odoo 实施商，并要求每一项给出 Standard / Configuration / Custom 的明确结论和报价。</p>
+<p>优先验证：</p>
+<ul>
+<li>Shopify 两店</li>
+<li>库存实时性</li>
+<li>三仓 Transit</li>
+<li>Allocation</li>
+<li>Returns / Refunds</li>
+<li>Xero</li>
+<li>多公司</li>
+<li>AU/NZ GST</li>
+<li>Landed Cost</li>
+<li>Container / Shipment</li>
+<li>Barcode</li>
+<li>审批</li>
+</ul>
+<hr>
+<h2 id="30-最终建议">30. 最终建议</h2>
+<ul>
+<li>当前最合理方案：以 Odoo 19 为基线做 Fit-Gap，采用 Odoo + Custom Modules，而不是一开始 100% 自建 ERP。</li>
+<li>标准业务交给 Odoo；真正特殊、形成竞争力的流程再开发。</li>
+<li>只有当核心业务流程约 20–30% 以上需要深度定制，且实时事件驱动成为关键要求时，再认真考虑独立 OMS/WMS。</li>
+</ul>
+<hr>
+<h1 id="附录">附录</h1>
+<h2 id="附录-a--推荐业务架构">附录 A — 推荐业务架构</h2>
+<pre class="hljs"><code><div>Shopify STARGEAR + Shopify PREMIER
+        ↓
+Odoo / OMS
+        ↓
+XMN / SYD / AUK
+        ↓
+Xero STARGEAR + Xero PREMIER
+</div></code></pre>
+<ul>
+<li>Shopify 负责 Commerce。</li>
+<li>Odoo/OMS 负责 Operations。</li>
+<li>Xero 负责 Finance。</li>
+</ul>
+<hr>
+<h2 id="附录-b--核心订单流">附录 B — 核心订单流</h2>
+<pre class="hljs"><code><div>Customer
+→ Shopify
+→ Order
+→ OMS/Odoo
+→ Inventory Allocation
+→ SYD/AUK
+→ Pick
+→ Pack
+→ Ship
+→ Tracking
+→ Shopify Fulfillment
+→ Xero Accounting
+</div></code></pre>
+<hr>
+<h2 id="附录-c--核心供应链流">附录 C — 核心供应链流</h2>
+<pre class="hljs"><code><div>Supplier
+→ Purchase Order
+→ XMN
+→ Container
+→ In Transit
+→ SYD/AUK
+→ Available
+→ Shopify
+</div></code></pre>
+<hr>
+<h2 id="附录-d--odoo-官方-shopify-connectorv190">附录 D — Odoo 官方 Shopify Connector（v19.0）</h2>
+<p><strong>来源：</strong><br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/shopify_connector.html</p>
+<p><strong>支持同步的数据：</strong></p>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orders</td>
+<td>Shopify → Odoo</td>
+</tr>
+<tr>
+<td>Products</td>
+<td>Shopify → Odoo</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td>双向</td>
+</tr>
+<tr>
+<td>Fulfillments / Deliveries</td>
+<td>双向</td>
+</tr>
+<tr>
+<td>Returns</td>
+<td>Shopify → Odoo</td>
+</tr>
+<tr>
+<td>Refunds / Credit Notes</td>
+<td>Shopify → Odoo</td>
+</tr>
+<tr>
+<td>Invoices &amp; Payments</td>
+<td>Odoo 自动创建</td>
+</tr>
+<tr>
+<td>Customers</td>
+<td>Shopify → Odoo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键限制与同步机制：</strong></p>
+<ul>
+<li>官方连接器不执行实时同步，不依赖 Webhook，全部通过 Scheduled Actions（cron）定期运行。</li>
+<li>默认同步频率：订单每 10 分钟；库存（Odoo → Shopify）每次拉取订单后推送；在 Odoo 处理的发货每 10 分钟。</li>
+<li>从 Shopify 拉取库存通常仅在首次设置连接器或修正数据不一致时需要，使用账户配置中的 “Fetch Inventory” 按钮手动触发。</li>
+</ul>
+<p><strong>配送处理模式对退货同步的影响：</strong></p>
+<ul>
+<li><strong>Deliveries handled in Odoo：</strong> Shopify 发起的退货不会自动同步，需在 Odoo 中手动处理。</li>
+<li><strong>Deliveries handled in Shopify：</strong> Shopify 发起的退货会自动同步到 Odoo。</li>
+</ul>
+<p><strong>对本次 Fit-Gap 的启示：</strong></p>
+<p>如果业务要求“库存实时性”或“退货自动回流”，官方连接器的 cron 机制（10 分钟间隔）可能不满足，需评估 TechMarbles 等第三方连接器的实时同步能力，或规划自定义 Webhook 开发。</p>
+<hr>
+<h2 id="附录-e--shopify-配送与退货管理官方文档">附录 E — Shopify 配送与退货管理（官方文档）</h2>
+<p><strong>来源：</strong><br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/shopify_connector/fulfillment.html</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>Deliveries handled in Odoo</th>
+<th>Deliveries handled in Shopify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>适用场景</td>
+<td>仓库团队已在 Odoo 中运营</td>
+<td>订单完全在 Shopify 或第三方物流中履约</td>
+</tr>
+<tr>
+<td>发货单创建</td>
+<td>订单同步时自动创建 Ready 状态的仓库发货单</td>
+<td>自动为 Unfulfilled 订单创建 Ready 状态的仓库发货单</td>
+</tr>
+<tr>
+<td>发货验证</td>
+<td>用户在 Odoo 中点击 Validate，每 10 分钟推送至 Shopify</td>
+<td>发货在 Shopify 完成后，承运人、追踪号和数量拉回 Odoo</td>
+</tr>
+<tr>
+<td>退货处理</td>
+<td>Shopify 发起的退货不自动同步，需手动处理</td>
+<td>Shopify 发起的退货自动同步到 Odoo</td>
+</tr>
+<tr>
+<td>拆分发货</td>
+<td>支持，可多次发货</td>
+<td>完全支持，可同步多地点、多承运人发货</td>
+</tr>
+</tbody>
+</table>
+<p><strong>拆分发货支持：</strong></p>
+<p>官方连接器完全支持拆分发货，可为同一订单创建多个 Fulfillment，包括不同地点发货、同一地点多次发货、不同承运人发货。</p>
+<p><strong>对本次 Fit-Gap 的启示：</strong></p>
+<ul>
+<li>三仓库（XMN/SYD/AUK）场景下，需明确 “Delivery Handled On” 的统一策略。</li>
+<li>若 SYD/AUK 在 Odoo 中处理发货、XMN Direct Ship 在 Shopify 侧处理，则退货同步路径会因模式不同而产生分裂，需在设计中明确规则。</li>
+<li>拆分发货是本次需求的硬性要求（第 7 节），官方连接器已声明支持，Fit-Gap 中可标记为 <strong>O（Odoo Standard）</strong>。</li>
+</ul>
+<hr>
+<h2 id="附录-f--odoo-销售退货与退款官方文档">附录 F — Odoo 销售退货与退款（官方文档）</h2>
+<p><strong>来源：</strong><br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/products_prices/returns.html</p>
+<h3 id="开票前退货before-invoicing">开票前退货（Before Invoicing）</h3>
+<ul>
+<li>使用 <strong>Reverse Transfers</strong> 完成退货。前提是 Inventory 应用已安装。</li>
+<li>流程：销售订单 → Delivery smart button → 已验证的发货单 → 点击 Return → 调整数量 → 确认。</li>
+<li>系统生成新的入库仓库操作，仓库团队验证后，原销售订单的 Delivered 数量自动更新为“初始发货量 − 退货量”。</li>
+<li>后续开票时，客户仅收到其保留商品的发票。</li>
+</ul>
+<h3 id="开票后退货after-invoicing">开票后退货（After Invoicing）</h3>
+<ul>
+<li>已验证或已发送的发票不能直接修改，需 <strong>Reverse Transfers + Credit Notes</strong> 配合完成。</li>
+<li>流程：销售订单 → Delivery → Return（同开票前）→ 仓库验证入库后，Delivered 数量更新。</li>
+<li>退款：从销售订单打开关联发票 → 点击 <strong>Credit Note</strong> → 填写 Reason、Journal、Reversal Date → 点击 Reverse 或 Reverse and Create Invoice → 确认。</li>
+<li>完成后页面顶部显示蓝色横幅，提示客户存在未分配贷项，可将其分配给原发票以标记为已付款。</li>
+</ul>
+<p><strong>对本次 Fit-Gap 的启示：</strong></p>
+<ul>
+<li>第 14 节要求“关联 Order、Invoice、Credit Note、Xero”。</li>
+<li>Odoo 原生的 Reverse Transfer + Credit Note 机制可覆盖“仓库退货 → 财务贷项”链路，但 <strong>Credit Note 同步至 Xero</strong> 取决于 Xero Connector 的能力，需单独验证。</li>
+<li>“Good / Damaged / Quarantine” 的分类检验不在标准退货流程中直接体现，可能需要 Custom Module 或配置额外的质检步骤。</li>
+</ul>
+<hr>
+<h2 id="附录-g--odoo-导航入门">附录 G — Odoo 导航入门</h2>
+<p><strong>来源：</strong><br>
+https://www.youtube.com/watch?v=NoxYrnnHgfk</p>
+<p><strong>用途：</strong></p>
+<ul>
+<li>作为团队（Vincent、Bessie、Cassie、Asher、Johnny、Craig）的入职培训基础资源。</li>
+<li>覆盖应用菜单访问、模块搜索与安装、基本界面导航。</li>
+<li>建议纳入 Phase 1 Foundation 的用户启用计划中，在配置 Company/Brand/Product/SKU 之前完成全员基础操作培训。</li>
+</ul>
+<hr>
+<h2 id="附录-h--odoo-库存基础收货与存储">附录 H — Odoo 库存基础：收货与存储</h2>
+<p><strong>来源：</strong><br>
+https://www.youtube.com/watch?v=0r575dWbkMk&amp;list=PL1-aSABtP6ACBCPEZqo3sGGK48sP3xS4U</p>
+<p><strong>覆盖内容：</strong></p>
+<ul>
+<li>产品与库位的设置，用于在 Odoo Inventory 中收货和存储物品。</li>
+<li>属于 Inventory 基础系列，该系列还涵盖补货、追溯、仓库调拨、产品预留、包装、日常操作等。</li>
+</ul>
+<p><strong>对本次实施的关联：</strong></p>
+<ul>
+<li>直接支撑第 12 节 Receiving / Put Away / WMS 的基础配置培训。</li>
+<li>建议 Asher（Warehouse Manager）与 Johnny（Sales + Warehouse）在 Phase 2 开始前完成该系列学习，作为 <strong>Put Away、Bin Location、Barcode</strong> 配置的操作前提。</li>
+</ul>
+<hr>
+<h2 id="附录-i--第三方连接器对比techmarbles-shopify-connector">附录 I — 第三方连接器对比：TechMarbles Shopify Connector</h2>
+<p><strong>参考来源：</strong></p>
+<ul>
+<li>YouTube 视频：Odoo Shopify Integration by TechMarbles<br>
+https://www.youtube.com/watch?v=2-yP6MhhmLc</li>
+<li>Shopify App Store：<br>
+https://apps.shopify.com/odoo-integrator</li>
+<li>Odoo Apps Store：<br>
+https://apps.odoo.com/apps/modules/18.0/techmarbles_shopify_connector</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Odoo 官方 Connector</th>
+<th>TechMarbles Connector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同步机制</td>
+<td>Cron（每 10 分钟）</td>
+<td>声称“实时同步”</td>
+</tr>
+<tr>
+<td>库存多地点</td>
+<td>需验证</td>
+<td>明确支持多地点库存同步</td>
+</tr>
+<tr>
+<td>历史数据导入</td>
+<td>不明确</td>
+<td>支持批量历史订单/产品/客户导入</td>
+</tr>
+<tr>
+<td>废弃购物车</td>
+<td>不支持</td>
+<td>可推送至 Odoo CRM 作为销售线索</td>
+</tr>
+<tr>
+<td>定价</td>
+<td>官方内置</td>
+<td>基础计划 $30/月 或 $300/年；Odoo Apps Store 显示 from $35/month</td>
+</tr>
+<tr>
+<td>Odoo 版本</td>
+<td>19.0 原生</td>
+<td>16/17/18/19+，支持 Odoo Online、Odoo.sh、自托管</td>
+</tr>
+<tr>
+<td>数据经过第三方云</td>
+<td>否</td>
+<td>是，数据经 TechMarbles 云同步服务处理</td>
+</tr>
+</tbody>
+</table>
+<p><strong>社区反馈（来自 Shopify App Store 评论摘录）：</strong></p>
+<ul>
+<li>有用户反馈 TechMarbles 团队对其部分发货同步需求响应迅速，并主动开发了所需功能。</li>
+<li>有用户使用其完成 PayPal、Klarna 等支付方式映射等复杂配置。</li>
+</ul>
+<p><strong>对本次 Fit-Gap 的建议：</strong></p>
+<p>如果第 15 节要求的“同步延迟”验证结果指向 <strong>10 分钟 cron 不可接受</strong>，TechMarbles 可作为备选方案之一纳入比较，但必须验证：</p>
+<ol>
+<li>三仓库（XMN/SYD/AUK）场景下多地点库存同步的准确性；</li>
+<li>退货/退款是否自动回流，以及是否与官方连接器在 “Deliveries handled in Shopify” 模式下的行为一致；</li>
+<li>数据经过第三方云同步服务的安全与合规是否满足第 21 节的 Audit/Security 要求（OAuth、加密、Secrets Management、API Access Control）。</li>
+</ol>
+<p>建议在 Fit-Gap 阶段将 <strong>官方 Connector 与 TechMarbles Connector 并行验证</strong>，以 UAT 场景中的“库存冲突”“重复订单”“失败重试”为测试用例，用实际同步延迟和错误率做决策依据。</p>
+<hr>
+<h2 id="参考链接汇总">参考链接汇总</h2>
+<ul>
+<li>Odoo Shopify Connector：<br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/shopify_connector.html</li>
+<li>Shopify delivery and return management：<br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/shopify_connector/fulfillment.html</li>
+<li>Odoo Returns：<br>
+https://www.odoo.com/documentation/19.0/applications/sales/sales/products_prices/returns.html</li>
+<li>TechMarbles Shopify Integration：<br>
+https://www.youtube.com/watch?v=2-yP6MhhmLc</li>
+<li>Navigate in Odoo：<br>
+https://www.youtube.com/watch?v=NoxYrnnHgfk</li>
+<li>Inventory Basics: Receive and Store Stock：<br>
+https://www.youtube.com/watch?v=0r575dWbkMk&amp;list=PL1-aSABtP6ACBCPEZqo3sGGK48sP3xS4U</li>
+</ul>
+<hr>
+<blockquote>
+<p>注：本文档根据公开资料与需求分析初稿整理，实施前请以 Odoo 官方文档、Xero/Shopify 官方说明及供应商最终确认为准。</p>
+</blockquote>
+
+</body>
+</html>
